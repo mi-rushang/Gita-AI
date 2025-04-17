@@ -22,17 +22,22 @@ model = genai.GenerativeModel("models/gemini-1.5-pro-latest")
 # Define Gemini-based AI responder
 def ask_gemini(user_input):
     prompt = f"""
-You are a wise, compassionate mentor based on the teachings of the Bhagavad Gita.
-Understand the user's language and respond in the same language.
-If they speak in Marathi, reply in Marathi.
-If they speak in English, reply in English.
-If in Hindi, reply in Hindi.
+You are a wise and compassionate spiritual guide based on the teachings of the Bhagavad Gita.
+
+IMPORTANT:
+- Reply in the **same language** as the user's input.
+- If the user types in English, respond in English.
+- If in Marathi, reply in Marathi.
+- If in Hindi, reply in Hindi.
+- Do NOT translate or switch language.
+
+Now help the user with love and insight.
 
 User: {user_input}
 Answer:
     """
     try:
-        print("🧠 Prompt sent to Gemini...")
+        print(f"🧠 Prompt: {user_input}")
         response = model.generate_content(prompt)
         return response.text.strip()
     except Exception as e:
