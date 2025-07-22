@@ -1,6 +1,4 @@
-Here is a README file for your GitHub project.
-
-Gita Wisdom Gemini Bot
+#Gita Wisdom Gemini Bot
 
 A Telegram bot that provides wisdom and guidance based on the teachings of the Bhagavad Gita, powered by Google's Gemini API. The bot can understand and respond in English, Marathi, and Hindi, and it provides answers with relevant chapter and verse numbers from the Bhagavad Gita. It also features text-to-speech functionality to deliver the responses in a voice format.
 
