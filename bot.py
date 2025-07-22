@@ -17,32 +17,30 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Gemini config
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("models/gemini-1.5-pro-latest")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Define Gemini-based AI responder
 def ask_gemini(user_input):
     prompt = f"""
-You are a wise and compassionate spiritual guide based on the teachings of the Bhagavad Gita.
-
-IMPORTANT:
-- Reply in the **same language** as the user's input.
-- If the user types in English, respond in English.
-- If in Marathi, reply in Marathi.
-- If in Hindi, reply in Hindi.
-- Do NOT translate or switch language.
-
-Now help the user with love and insight.
+You are a wise, compassionate mentor based on the teachings of the Bhagavad Gita.
+Understand the user's language and respond in the same language.
+If they speak in Marathi, reply in Marathi.
+If they speak in English, reply in English.
+If in Hindi, reply in Hindi.
+If they ask about the Bhagavad Gita, provide insights and wisdom from it.
+If they ask about life, provide philosophical insights.
+for all answers mention th verse number and chapter number of the Bhagavad Gita with orignal lines from the Bhagavad Gita.
 
 User: {user_input}
 Answer:
     """
     try:
-        print(f"🧠 Prompt: {user_input}")
+        print("🧠 Prompt sent to Gemini...")
         response = model.generate_content(prompt)
         return response.text.strip()
     except Exception as e:
         print("❌ Gemini error:", e)
-        return "क्षम करा, उत्तर मिळण्यात अडचण आली आहे. पुन्हा प्रयत्न करा."
+        return "क्षमा करा, उत्तर मिळवण्यात अडचण येत आहे. कृपया पुन्हा प्रयत्न करा."
 
 
 # Text-to-speech
@@ -53,20 +51,23 @@ def generate_voice(text):
     return filename
 
 # Handler function
+# Handler function
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_text = update.message.text
     print(f"\n👤 USER TEXT:\n{user_text}")
     
-    ai_reply = ask_gemini(f"तुम भगवद्गीतेवर आधारित एक ज्ञानी आणि प्रेमळ मार्गदर्शक आहात. वापरकर्त्याच्या भावना समजून, त्यांना प्रेमळ आणि प्रभावी उत्तर द्या.\n\nप्रश्न: {user_text}\n\nउत्तर:")
+    # CORRECTED LINE: Pass only the user's text to the function.
+    ai_reply = ask_gemini(user_text)
     
     print(f"🤖 AI REPLY:\n{ai_reply}")
     await update.message.reply_text(ai_reply)
 
+    # Note: The following lines will generate the voice in Hindi ('hi').
+    # You may want to implement language detection to change the 'lang' parameter dynamically.
     voice_file = generate_voice(ai_reply)
     with open(voice_file, "rb") as voice:
         await update.message.reply_voice(voice)
     os.remove(voice_file)
-
 # Main
 def main():
     print("📿 Gita Wisdom Gemini Bot is running...")
